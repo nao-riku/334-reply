@@ -10,7 +10,7 @@ consumer_key = os.environ['CK']
 consumer_secret = os.environ['CS']
 access_token = os.environ['AT']
 access_token_secret = os.environ['AS']
-bearer_token　 = os.environ['BT']
+bearer_token = os.environ['BT']
 
 Client = tweepy.Client(bearer_token, consumer_key, consumer_secret, access_token, access_token_secret)
 
