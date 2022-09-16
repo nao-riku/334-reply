@@ -1,0 +1,29 @@
+name: 334Ranker
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+          
+      - run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Run Python
+        env:
+          CK: ${{ secrets.CK }}
+          CS: ${{ secrets.CS }}
+          AT: ${{ secrets.AT }}
+          AS: ${{ secrets.AS }}
+          BT: ${{ secrets.BT }}
+          TZ: "Asia/Tokyo"
+        run: python app.py
