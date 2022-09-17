@@ -38,7 +38,7 @@ def delete_all_rules(rules):
     #print(json.dumps(response.json()))
 
 def set_rules(delete):
-    rules = [{"value":"@Rank334"}]
+    rules = [{"value":"@Rank334 -is:retweet"}]
     payload = {"add": rules}
     response = requests.post("https://api.twitter.com/2/tweets/search/stream/rules", auth=bearer_oauth, json=payload)
     if response.status_code != 201:
