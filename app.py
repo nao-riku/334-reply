@@ -4,7 +4,6 @@ import os
 import json
 from requests_oauthlib import OAuth1Session
 import time
-from dateutil import tz
 import traceback
 import tweepy
 
@@ -49,7 +48,7 @@ def set_rules(delete):
 def TweetId2Time(id):
     epoch = ((id >> 22) + 1288834974657) / 1000.0
     d = datetime.datetime.fromtimestamp(epoch)
-    d = d.astimezone(tz.gettz('Asia/Tokyo'))
+    d = d.astimezone(datetime.timezone(datetime.timedelta(hours=9)))
     stringTime = ""
     stringTime += '{0:02d}'.format(d.hour)
     stringTime += ':'
