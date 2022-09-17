@@ -93,7 +93,8 @@ def get_stream(headers):
 							
                             print(rep_text)
                             params = {"text": rep_text, "reply": {"in_reply_to_tweet_id": reply_id}}
-                            response = oath.post("https://api.twitter.com/2/tweets", json = params)
+                            response = oath.post("https://api.twitter.com/2/tweets", json = params, proxies = proxy_dict)
+                            print(response.headers["x-rate-limit-remaining"])
                             if "status" in response.json():
                                 if response.json()["status"] == 429:
                                     response = oath.post("https://api.twitter.com/2/tweets", json = params, proxies = proxy_dict)
