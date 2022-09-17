@@ -59,8 +59,8 @@ def get_stream(headers):
                         tweet_id = json_response["data"]["id"] #ツイートID
                         tweet_text=json_response["data"]["text"] #相手の送ってきた内容
 			if "@Rank334" in tweet_text or "@rank334" in tweet_text:
-                       		print(tweet_id)
-				Client.create_tweet(text="reply test", in_reply_to_tweet_id =tweet_id)
+                       	    print(tweet_id)
+			    Client.create_tweet(text="reply test", in_reply_to_tweet_id =tweet_id)
                         if time.time() - start > 20:
                           sys.exit()
 
