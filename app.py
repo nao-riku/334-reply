@@ -66,6 +66,7 @@ def TweetId2Time(id):
 
 def get_stream(headers):
     global oath
+    proxy_dict = {"http": "socks5://127.0.0.1:9050", "https": "socks5://127.0.0.1:9050"}
     run = 1
     start = time.time()
     while run:
@@ -93,6 +94,9 @@ def get_stream(headers):
                             print(rep_text)
                             params = {"text": rep_text, "reply": {"in_reply_to_tweet_id": reply_id}}
                             response = oath.post("https://api.twitter.com/2/tweets", json = params)
+                            if "status" in response.json():
+                                if response.json()["status"] == 429:
+                                    response = oath.post("https://api.twitter.com/2/tweets", json = params, proxies = proxy_dict)
 							
                             if time.time() - start > 40:
                                 sys.exit()
