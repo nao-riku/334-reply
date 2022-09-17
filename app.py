@@ -91,7 +91,7 @@ def get_stream(headers):
                                 rep_text = "ツイート時刻: " + TweetId2Time(int(reply_id)) + "\n\n順位: /"
 							
                             print(rep_text)
-                            params = {"text": rep_text, "in_reply_to_status_id": reply_id}
+                            params = {"text": rep_text, "reply": {"in_reply_to_tweet_id": reply_id}}
                             response = oath.post("https://api.twitter.com/2/tweets", json = params)
 							
                             if time.time() - start > 40:
