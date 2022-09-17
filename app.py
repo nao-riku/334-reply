@@ -71,19 +71,19 @@ def get_stream(headers):
                 for response_line in response.iter_lines():
                     if response_line:
                         json_response = json.loads(response_line)
-						tweet_text = json_response["data"]["text"]
-						if "@Rank334" in tweet_text or "@rank334" in tweet_text:
+                        tweet_text = json_response["data"]["text"]
+                        if "@Rank334" in tweet_text or "@rank334" in tweet_text:
                             reply_id = json_response["data"]["id"]
-							rep_text = ""
+                            rep_text = ""
 						
                             if 'referenced_tweets' in json_response["data"]:
                                 if json_response["data"]['referenced_tweets'][0]["type"] === "retweeted":
                                     continue
-							    else:
-								    tweet_id = json_response["data"]['referenced_tweets'][0]["id"]
-									rep_text = "ツイート時刻: " + TweetId2Time(int(tweet_id))
-							else:
-								rep_text = "ツイート時刻: " + TweetId2Time(int(tweet_id))　+ '\n\n順位: /'
+                                else:
+                                    tweet_id = json_response["data"]['referenced_tweets'][0]["id"]
+                                    rep_text = "ツイート時刻: " + TweetId2Time(int(tweet_id))
+                            else:
+                                rep_text = "ツイート時刻: " + TweetId2Time(int(tweet_id))　+ '\n\n順位: /'
 							
                             Client.create_tweet(text=rep_text, in_reply_to_tweet_id = reply_id)
 							
