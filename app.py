@@ -77,7 +77,7 @@ def get_stream(headers):
                             rep_text = ""
 						
                             if 'referenced_tweets' in json_response["data"]:
-                                if json_response["data"]['referenced_tweets'][0]["type"] === "retweeted":
+                                if json_response["data"]['referenced_tweets'][0]["type"] == "retweeted":
                                     continue
                                 else:
                                     tweet_id = json_response["data"]['referenced_tweets'][0]["id"]
