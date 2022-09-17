@@ -1,3 +1,4 @@
+import sys
 import requests
 import os
 import json
@@ -23,7 +24,7 @@ def get_rules():
     response = requests.get("https://api.twitter.com/2/tweets/search/stream/rules", auth=bearer_oauth)
     if response.status_code != 200:
         raise Exception("Cannot get rules (HTTP {}): {}".format(response.status_code, response.text))
-    print(json.dumps(response.json()))
+    #print(json.dumps(response.json()))
     return response.json()
 
 def delete_all_rules(rules):
@@ -34,7 +35,7 @@ def delete_all_rules(rules):
     response = requests.post("https://api.twitter.com/2/tweets/search/stream/rules", auth=bearer_oauth, json=payload)
     if response.status_code != 200:
         raise Exception("Cannot delete rules (HTTP {}): {}".format(response.status_code, response.text))
-    print(json.dumps(response.json()))
+    #print(json.dumps(response.json()))
 
 def set_rules(delete):
     rules = [{"value":"大阪"}]
@@ -42,7 +43,7 @@ def set_rules(delete):
     response = requests.post("https://api.twitter.com/2/tweets/search/stream/rules", auth=bearer_oauth, json=payload)
     if response.status_code != 201:
         raise Exception("Cannot add rules (HTTP {}): {}".format(response.status_code, response.text))
-    print(json.dumps(response.json()))
+    #print(json.dumps(response.json()))
 
 def get_stream(headers):
     run = 1
