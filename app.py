@@ -38,7 +38,7 @@ def delete_all_rules(rules):
     #print(json.dumps(response.json()))
 
 def set_rules(delete):
-    rules = [{"value":"大阪"}]
+    rules = [{"value":"@Rank334"}]
     payload = {"add": rules}
     response = requests.post("https://api.twitter.com/2/tweets/search/stream/rules", auth=bearer_oauth, json=payload)
     if response.status_code != 201:
@@ -48,20 +48,19 @@ def set_rules(delete):
 def get_stream(headers):
     run = 1
     start = time.time()
-    print(start)
     while run:
         try:
             with requests.get("https://api.twitter.com/2/tweets/search/stream", auth=bearer_oauth, stream=True) as response:
-                print(response.status_code)
                 if response.status_code != 200:
                     raise Exception("Cannot get stream (HTTP {}): {}".format(response.status_code, response.text))
                 for response_line in response.iter_lines():
                     if response_line:
                         json_response = json.loads(response_line)
                         tweet_id = json_response["data"]["id"] #ツイートID
-                        reply_text=json_response["data"]["text"] #相手の送ってきた内容
+                        text=json_response["data"]["text"] #相手の送ってきた内容
                         print(tweet_id)
-                        if time.time() - start > 5:
+                        print(text)
+                        if time.time() - start > 20:
                           sys.exit()
 
 
