@@ -4,6 +4,7 @@ import os
 import json
 from requests_oauthlib import OAuth1Session
 import time
+from dateutil import tz
 import traceback
 import tweepy
 
@@ -44,25 +45,50 @@ def set_rules(delete):
     if response.status_code != 201:
         raise Exception("Cannot add rules (HTTP {}): {}".format(response.status_code, response.text))
     #print(json.dumps(response.json()))
+	
+def TweetId2Time(id):
+    epoch = ((id >> 22) + 1288834974657) / 1000.0
+    d = datetime.datetime.fromtimestamp(epoch)
+    d = d.astimezone(tz.gettz('Asia/Tokyo'))
+    stringTime = ""
+    stringTime += '{0:02d}'.format(d.hour)
+    stringTime += ':'
+    stringTime += '{0:02d}'.format(d.minute)
+    stringTime += ':'
+    stringTime += '{0:02d}'.format(d.second)
+    stringTime += '.'
+    stringTime += '{0:03d}'.format(int(d.microsecond / 1000))
+    return stringTime
 
 def get_stream(headers):
     run = 1
     start = time.time()
     while run:
         try:
-            with requests.get("https://api.twitter.com/2/tweets/search/stream", auth=bearer_oauth, stream=True) as response:
+            with requests.get("https://api.twitter.com/2/tweets/search/stream?tweet.fields=referenced_tweets", auth=bearer_oauth, stream=True) as response:
                 if response.status_code != 200:
                     raise Exception("Cannot get stream (HTTP {}): {}".format(response.status_code, response.text))
                 for response_line in response.iter_lines():
                     if response_line:
                         json_response = json.loads(response_line)
-                        tweet_id = json_response["data"]["id"] #ツイートID
-                        tweet_text=json_response["data"]["text"] #相手の送ってきた内容
-                        if "@Rank334" in tweet_text or "@rank334" in tweet_text:
-                            print(tweet_id)
-                            Client.create_tweet(text="reply test", in_reply_to_tweet_id = tweet_id)
-                        if time.time() - start > 20:
-                            sys.exit()
+						tweet_text = json_response["data"]["text"]
+						if "@Rank334" in tweet_text or "@rank334" in tweet_text:
+                            reply_id = json_response["data"]["id"]
+							rep_text = ""
+						
+                            if 'referenced_tweets' in json_response["data"]:
+                                if json_response["data"]['referenced_tweets'][0]["type"] === "retweeted":
+                                    continue
+							    else:
+								    tweet_id = json_response["data"]['referenced_tweets'][0]["id"]
+									rep_text = "ツイート時刻: " + TweetId2Time(int(tweet_id))
+							else:
+								rep_text = "ツイート時刻: " + TweetId2Time(int(tweet_id))　+ '\n\n順位: /'
+							
+                            Client.create_tweet(text=rep_text, in_reply_to_tweet_id = reply_id)
+							
+                            if time.time() - start > 40:
+                                sys.exit()
 
 
         except ChunkedEncodingError as chunkError:
