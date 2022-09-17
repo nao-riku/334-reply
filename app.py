@@ -83,7 +83,7 @@ def get_stream(headers):
                                     tweet_id = json_response["data"]['referenced_tweets'][0]["id"]
                                     rep_text = "ツイート時刻: " + TweetId2Time(int(tweet_id))
                             else:
-                                rep_text = "ツイート時刻: " + TweetId2Time(int(reply_id))　+ '\n\n順位: /'
+                                rep_text = "ツイート時刻: " + TweetId2Time(int(reply_id)) + "\n\n順位: /"
 							
                             Client.create_tweet(text=rep_text, in_reply_to_tweet_id = reply_id)
 							
