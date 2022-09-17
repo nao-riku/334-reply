@@ -6,7 +6,6 @@ from requests_oauthlib import OAuth1Session
 import time
 import datetime
 import traceback
-import tweepy
 
 consumer_key = os.environ['CK']
 consumer_secret = os.environ['CS']
@@ -14,7 +13,12 @@ access_token = os.environ['AT']
 access_token_secret = os.environ['AS']
 bearer_token = os.environ['BT']
 
-Client = tweepy.Client(bearer_token, consumer_key, consumer_secret, access_token, access_token_secret)
+oath = OAuth1Session(
+    consumer_key,
+    consumer_secret,
+    access_token,
+    access_token_secret
+)
 
 def bearer_oauth(r):
     r.headers["Authorization"] = f"Bearer {bearer_token}"
@@ -85,7 +89,8 @@ def get_stream(headers):
                             else:
                                 rep_text = "ツイート時刻: " + TweetId2Time(int(reply_id)) + "\n\n順位: /"
 							
-                            Client.create_tweet(text=rep_text, in_reply_to_tweet_id = reply_id)
+                            params = {"text": rep_text, "in_reply_to_status_id": reply_id}
+                            response = oath.post("https://api.twitter.com/2/tweets", json = params)
 							
                             if time.time() - start > 40:
                                 sys.exit()
