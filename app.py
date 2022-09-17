@@ -65,6 +65,7 @@ def TweetId2Time(id):
     return stringTime
 
 def get_stream(headers):
+    global oath
     run = 1
     start = time.time()
     while run:
@@ -89,6 +90,7 @@ def get_stream(headers):
                             else:
                                 rep_text = "ツイート時刻: " + TweetId2Time(int(reply_id)) + "\n\n順位: /"
 							
+                            print(rep_text)
                             params = {"text": rep_text, "in_reply_to_status_id": reply_id}
                             response = oath.post("https://api.twitter.com/2/tweets", json = params)
 							
