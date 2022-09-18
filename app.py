@@ -118,6 +118,9 @@ def get_stream(headers):
                         json_response = json.loads(response_line)
                         tweet_id = json_response["data"]["id"]
                         t_time = TweetId2Time(int(tweet_id))
+			print(start_time)
+			print(t_time)
+			print(end_time)
                         if com_t(start_time, t_time, end_time):
                         
                             tweet_text = json_response["data"]["text"]
