@@ -26,5 +26,6 @@ jobs:
           AT: ${{ secrets.AT }}
           AS: ${{ secrets.AS }}
           BT: ${{ secrets.BT }}
+          URL2: ${{ secrets.URL2 }}
           TZ: "Asia/Tokyo"
         run: python app.py
