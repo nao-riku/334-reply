@@ -95,8 +95,8 @@ def get_stream(headers):
     ]
     for num in range(7):
         if com_t(times[num], now, times[num + 1]):
-            start_time = times[num + 1]
-            end_time = times[num + 2]
+            start_time = times[num + 2]
+            end_time = times[num + 3]
             exit_time = datetime.datetime(end_time.year, end_time.month, end_time.day, end_time.hour, 0, 20)
 
     load_res_yet = True
