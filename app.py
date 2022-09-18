@@ -100,8 +100,8 @@ def get_stream(headers):
             exit_time = end_time#datetime.datetime(end_time.year, end_time.month, end_time.day, end_time.hour, 0, 20)
 
     load_res_yet = True
-    load_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 45)
-    r_start_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 35, 0)
+    load_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second + 10)#datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 45)
+    r_start_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 0, 35, 0)
     start_str = start_time.date().strftime('%Y/%m/%d')
     r_end_time = datetime.datetime(start_time.year, start_time.month, start_time.day + 1, 0, 0, 0)
     
