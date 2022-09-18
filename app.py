@@ -84,7 +84,7 @@ def get_stream(headers):
     now = datetime.datetime.now()
     times = [
         datetime.datetime(now.year, now.month, now.day, 0, 0, 0),
-        datetime.datetime(now.year, now.month, now.day, 3, 0, 0),
+        datetime.datetime(now.year, now.month, now.day, 0, 40, 0),
         datetime.datetime(now.year, now.month, now.day, 7, 0, 0),
         datetime.datetime(now.year, now.month, now.day, 11, 0, 0),
         datetime.datetime(now.year, now.month, now.day, 15, 0, 0),
