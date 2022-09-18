@@ -1,6 +1,8 @@
 name: 334Ranker
 
 on:
+  schedule:
+    - cron: '0 2,6,10,14,18,22 * * *'
   repository_dispatch:
   workflow_dispatch:
 
