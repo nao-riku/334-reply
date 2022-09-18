@@ -52,7 +52,7 @@ def set_rules(delete):
 	
 def TweetId2Time(id):
     epoch = ((id >> 22) + 1288834974657) / 1000.0
-    d = datetime.datetime.fromtimestamp(epoch))))
+    d = datetime.datetime.fromtimestamp(epoch)
     return d
     
 def TimeToStr(d):
