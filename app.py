@@ -84,8 +84,8 @@ def get_stream(headers):
     now = datetime.datetime.now()
     times = [
         datetime.datetime(now.year, now.month, now.day, 0, 0, 0),
-        datetime.datetime(now.year, now.month, now.day, 1, 40, 0),
-        datetime.datetime(now.year, now.month, now.day, 0, 0, 0),
+        datetime.datetime(now.year, now.month, now.day, 3, 0, 0),
+        datetime.datetime(now.year, now.month, now.day, 7, 0, 0),
         datetime.datetime(now.year, now.month, now.day, 11, 0, 0),
         datetime.datetime(now.year, now.month, now.day, 15, 0, 0),
         datetime.datetime(now.year, now.month, now.day, 19, 0, 0),
@@ -95,9 +95,9 @@ def get_stream(headers):
     ]
     for num in range(7):
         if com_t(times[num], now, times[num + 1]):
-            start_time = times[num + 2]
-            end_time = times[num + 3]
-            exit_time = datetime.datetime(end_time.year, end_time.month, end_time.day, end_time.hour, 0, 20)
+            start_time = datetime.datetime(now.year, now.month, now.day, 0, 0, 0)#times[num + 2]
+            end_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second + 30)#times[num + 3]
+            exit_time = endtime#datetime.datetime(end_time.year, end_time.month, end_time.day, end_time.hour, 0, 20)
 
     load_res_yet = True
     load_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 45)
@@ -185,7 +185,6 @@ class ChunkedEncodingError(Exception):
 
 
 def main():
-    print("start")
     get_result()
     rules = get_rules()
     delete = delete_all_rules(rules)
