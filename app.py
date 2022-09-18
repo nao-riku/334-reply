@@ -82,6 +82,7 @@ def com_t(f, s, t):
 
 def get_stream(headers):
     now = datetime.datetime.now()
+    print(now)
     times = [
         datetime.datetime(now.year, now.month, now.day, 0, 0, 0),
         datetime.datetime(now.year, now.month, now.day, 1, 40, 0),
