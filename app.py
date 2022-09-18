@@ -118,9 +118,8 @@ def get_stream(headers):
                         json_response = json.loads(response_line)
                         tweet_id = json_response["data"]["id"]
                         t_time = TweetId2Time(int(tweet_id))
-                        print(start_time)
-                        print(t_time)
-                        print(end_time)
+                        print(com_t(start_time, t_time, end_time))
+                        print(json_response)
                         if com_t(start_time, t_time, end_time):
                         
                             tweet_text = json_response["data"]["text"]
@@ -130,7 +129,9 @@ def get_stream(headers):
 						
                                 if 'referenced_tweets' in json_response["data"]:
                                     orig_id = json_response["data"]['referenced_tweets'][0]["id"]
+                                    print(orig_id)
                                     orig_time = TweetId2Time(int(orig_id))
+                                    print(orig_time)
                                     if json_response["data"]['referenced_tweets'][0]["type"] == "retweeted":
                                         continue
                                     else:
