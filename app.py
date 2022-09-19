@@ -68,11 +68,14 @@ def TimeToStr(d):
     return stringTime
 
 today_result = {}
+load_res_yet = True
 
 def get_result():
-    global today_result
+    global today_result, load_res_yet
     r = requests.get(os.environ['URL2'])
     today_result = r.json()
+    if today_result == {}:
+        load_res_yet = True
     
 def com(f, s):
     return (s - f).total_seconds() > 0
@@ -98,7 +101,12 @@ def get_stream():
         if com_t(times[num], now, times[num + 1]):
             start_time = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, times[num + 1].second + 1)
             end_time = times[num + 2]
-            
+    start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute + 1, 0)
+    end_time = datetime.datetime(now.year, now.month, now.day + 1, 2, 47, 40)
+                
+    if start_time.hour != 2:
+        get_result()
+        
     time.sleep((start_time - datetime.datetime.now()).total_seconds())
     
     timeout = (end_time - datetime.datetime.now()).total_seconds()
@@ -107,14 +115,14 @@ def get_stream():
     def stream():
         nonlocal start_time, end_time
         
-        load_res_yet = True
+        #if com(datetime.datetime(now.year, now.month, now.day, 22, 47, 40), start_time):
         load_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 45)
         r_start_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 35, 0)
         start_str = start_time.date().strftime('%Y/%m/%d')
         r_end_time = datetime.datetime(start_time.year, start_time.month, start_time.day + 1, 0, 0, 0)
 
     
-        global oath, today_result
+        global oath, today_result, load_res_yet
         proxy_dict = {"http": "socks5://127.0.0.1:9050", "https": "socks5://127.0.0.1:9050"}
         run = 1
 
@@ -144,7 +152,7 @@ def get_stream():
                                         else:
                                             continue
                                     else:
-                                        if com_t(r_start_time, t_time, r_end_time):
+                                        if com_t(r_start_time, t_time, r_end_time) and today_result != {}:
                                             key = str(json_response["data"]["author_id"])
                                             if key in today_result:
                                                 rep_text = today_result[key][1] + "\n\n" + start_str + "の334結果\nResult: +" + today_result[key][2] + "sec\nRank: " + today_result[key][0] + " / " + today_result["参加者数"][0]
@@ -198,7 +206,6 @@ class ChunkedEncodingError(Exception):
 
 
 def main():
-    get_result()
     #rules = get_rules()
     #delete = delete_all_rules(rules)
     #set = set_rules(delete)
