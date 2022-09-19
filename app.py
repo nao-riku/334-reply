@@ -100,7 +100,7 @@ def get_stream():
             end_time = times[num + 2]
             
     start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute + 1, 40)
-    end_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute + 1, 40)
+    end_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute + 2, 40)
             
     time.sleep((start_time - datetime.datetime.now()).total_seconds())
     
