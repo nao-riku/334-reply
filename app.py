@@ -138,6 +138,10 @@ def get_stream():
                             json_response = json.loads(response_line)
                             tweet_id = json_response["data"]["id"]
                             t_time = TweetId2Time(int(tweet_id))
+			
+                            if com(load_time, t_time) and load_res_yet:
+                                get_result()
+				
                             if com_t(start_time, t_time, end_time):
                         
                                 tweet_text = json_response["data"]["text"]
@@ -169,8 +173,6 @@ def get_stream():
                                         if response.json()["status"] == 429:
                                             response = oath.post("https://api.twitter.com/2/tweets", json = params, proxies = proxy_dict)
                                         
-                            if com(load_time, t_time) and load_res_yet:
-                                get_result()
 
             except timeout_decorator.TimeoutError:
                 print(start_time)
