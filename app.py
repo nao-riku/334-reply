@@ -44,7 +44,7 @@ def delete_all_rules(rules):
     #print(json.dumps(response.json()))
 
 def set_rules(delete):
-    rules = [{"value":"to:Rank334"}]
+    rules = [{"value":"@Rank334"}]
     payload = {"add": rules}
     response = requests.post("https://api.twitter.com/2/tweets/search/stream/rules", auth=bearer_oauth, json=payload)
     if response.status_code != 201:
@@ -99,7 +99,7 @@ def get_stream():
             start_time = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, times[num + 1].second + 1)
             end_time = times[num + 2]
     start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute + 1, 0)
-    end_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute + 1, 30)
+    end_time = datetime.datetime(now.year, now.month, now.day, 22, 47, 40)
             
     time.sleep((start_time - datetime.datetime.now()).total_seconds())
     
@@ -134,17 +134,17 @@ def get_stream():
                             if com_t(start_time, t_time, end_time):
                         
                                 tweet_text = json_response["data"]["text"]
-                                if "@Rank334" in tweet_text or "@rank334" in tweet_text:
+                                if ("@Rank334" in tweet_text or "@rank334" in tweet_text) and json_response["data"]["author_id"] != '1558892196069134337':
                                     reply_id = json_response["data"]["id"]
                                     rep_text = ""
 						
                                     if 'referenced_tweets' in json_response["data"]:
-                                        orig_id = json_response["data"]['referenced_tweets'][0]["id"]
-                                        orig_time = TweetId2Time(int(orig_id))
-                                        if json_response["data"]['referenced_tweets'][0]["type"] == "retweeted":
-                                            continue
-                                        else:
+                                        if json_response["data"]['referenced_tweets'][0]["type"] == "replied_to":
+                                            orig_id = json_response["data"]['referenced_tweets'][0]["id"]
+                                            orig_time = TweetId2Time(int(orig_id))
                                             rep_text = "ツイート時刻: " + TimeToStr(orig_time)
+                                        else:
+                                            continue
                                     else:
                                         if com_t(r_start_time, t_time, r_end_time):
                                             key = str(json_response["data"]["author_id"])
