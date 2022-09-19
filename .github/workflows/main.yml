@@ -16,7 +16,6 @@ jobs:
         with:
           python-version: '3.8'
       - run: |
-          pip install pysocks
           brew install tor
           brew services start tor
           pip install -r requirements.txt
