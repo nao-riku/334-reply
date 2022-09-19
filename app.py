@@ -117,10 +117,10 @@ def get_stream():
         nonlocal start_time, end_time
         
         #if com(datetime.datetime(now.year, now.month, now.day, 22, 47, 40), start_time):
-        load_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 45)
-        r_start_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 35, 0)
+        load_time = datetime.datetime(start_time.year, start_time.month, start_time.day - 1, 3, 34, 45)
+        r_start_time = datetime.datetime(start_time.year, start_time.month, start_time.day - 1, 3, 35, 0)
         start_str = start_time.date().strftime('%Y/%m/%d')
-        r_end_time = datetime.datetime(start_time.year, start_time.month, start_time.day + 1, 0, 0, 0)
+        r_end_time = datetime.datetime(start_time.year, start_time.month, start_time.day + 0, 0, 0, 0)
     
         global oath, today_result, load_res_yet
         proxy_dict = {"http": "socks5://127.0.0.1:9050", "https": "socks5://127.0.0.1:9050"}
