@@ -156,9 +156,9 @@ def get_stream():
                                         if com_t(r_start_time, t_time, r_end_time) and today_result != {}:
                                             key = str(json_response["data"]["author_id"])
                                             if key in today_result:
-                                                rep_text = today_result[key][1] + "\n\n" + start_str + "の334結果\nResult: +" + today_result[key][2] + "sec\nRank: " + today_result[key][0] + " / " + today_result["参加者数"][0]
+                                                rep_text = today_result[key][1] + "\n\n" + start_str + "の334結果\nresult: +" + today_result[key][2] + " [sec]\nrank: " + today_result[key][0] + " / " + today_result["参加者数"][0]
                                             else:
-                                                rep_text = json_response["includes"]["users"][0]["name"] + "\n\n" + start_str + "の334結果\nResult: DQ\nRank: DQ / " + today_result["参加者数"][0]
+                                                rep_text = json_response["includes"]["users"][0]["name"] + "\n\n" + start_str + "の334結果\nresult: DQ\nrank: DQ / " + today_result["参加者数"][0]
                                         else:
                                             continue
 							
