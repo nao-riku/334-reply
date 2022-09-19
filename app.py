@@ -11,7 +11,7 @@ consumer_key = os.environ['CK']
 consumer_secret = os.environ['CS']
 access_token = os.environ['AT']
 access_token_secret = os.environ['AS']
-bearer_token = os.environ['BT']
+bearer_token_sub = os.environ['BT']
 
 oath = OAuth1Session(
     consumer_key,
@@ -21,7 +21,7 @@ oath = OAuth1Session(
 )
 
 def bearer_oauth(r):
-    r.headers["Authorization"] = f"Bearer {bearer_token}"
+    r.headers["Authorization"] = f"Bearer {bearer_token_sub}"
     r.headers["User-Agent"] = "v2FilteredStreamPython"
     return r
 
@@ -95,22 +95,26 @@ def get_stream(headers):
     ]
     for num in range(7):
         if com_t(times[num], now, times[num + 1]):
-            start_time = datetime.datetime(now.year, now.month, now.day, 0, 0, 0)#times[num + 1]
-            end_time = datetime.datetime(now.year, now.month, now.day, 23, 0, 0)#times[num + 2]
-            exit_time = datetime.datetime(end_time.year, end_time.month, end_time.day, end_time.hour, 0, 20)
+            start_time = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, 15)
+            start_time2 = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, 20)
+            end_time = times[num + 2]
+            exit_time = datetime.datetime(times[num + 2].year, times[num + 2].month, times[num + 2].day, times[num + 2].hour, times[num + 2].minute, 14)
 
     load_res_yet = True
     load_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 45)
     r_start_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 35, 0)
     start_str = start_time.date().strftime('%Y/%m/%d')
     r_end_time = datetime.datetime(start_time.year, start_time.month, start_time.day + 1, 0, 0, 0)
+
+    time.sleep((start_time - datetime.datetime.now()).total_seconds())
     
     global oath, today_result
     proxy_dict = {"http": "socks5://127.0.0.1:9050", "https": "socks5://127.0.0.1:9050"}
     run = 1
+    timeout = (exit_time - datetime.datetime.now()).total_seconds() 
     while run:
         try:
-            with requests.get("https://api.twitter.com/2/tweets/search/stream?tweet.fields=referenced_tweets&expansions=author_id&user.fields=name", auth=bearer_oauth, stream=True) as response:
+            with requests.get("https://api.twitter.com/2/tweets/search/stream?tweet.fields=referenced_tweets&expansions=author_id&user.fields=name", auth=bearer_oauth2, stream=True, timeout=timeout) as response:
                 if response.status_code != 200:
                     raise Exception("Cannot get stream (HTTP {}): {}".format(response.status_code, response.text))
                 for response_line in response.iter_lines():
@@ -118,7 +122,7 @@ def get_stream(headers):
                         json_response = json.loads(response_line)
                         tweet_id = json_response["data"]["id"]
                         t_time = TweetId2Time(int(tweet_id))
-                        if com_t(start_time, t_time, end_time):
+                        if com_t(start_time2, t_time, end_time):
                         
                             tweet_text = json_response["data"]["text"]
                             if "@Rank334" in tweet_text or "@rank334" in tweet_text:
@@ -152,9 +156,6 @@ def get_stream(headers):
                         if com(load_time, t_time) and com_t(start_time, load_time, end_time) and load_res_yet:
                             load_res_yet = False
                             get_result()
-							
-                        if com(exit_time, t_time):
-                            sys.exit()
 
 
         except ChunkedEncodingError as chunkError:
