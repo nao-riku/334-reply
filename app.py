@@ -99,7 +99,7 @@ def get_stream():
             start_time = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, times[num + 1].second + 1)
             end_time = times[num + 2]
             
-    start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute + 1, 40)
+    start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute + 1, 0)
     end_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute + 2, 40)
             
     time.sleep((start_time - datetime.datetime.now()).total_seconds())
@@ -124,7 +124,7 @@ def get_stream():
 
         while run:
             try:
-                with requests.get("https://api.twitter.com/2/tweets/search/stream?tweet.fields=referenced_tweets&expansions=author_id&user.fields=name", auth=bearer_oauth2, stream=True, timeout=timeout) as response:
+                with requests.get("https://api.twitter.com/2/tweets/search/stream?tweet.fields=referenced_tweets&expansions=author_id&user.fields=name", auth=bearer_oauth, stream=True, timeout=timeout) as response:
                     if response.status_code != 200:
                         raise Exception("Cannot get stream (HTTP {}): {}".format(response.status_code, response.text))
                     for response_line in response.iter_lines():
