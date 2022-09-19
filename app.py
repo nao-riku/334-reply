@@ -75,7 +75,6 @@ def get_result():
     load_res_yet = False
     r = requests.get(os.environ['URL2'])
     today_result = r.json()
-    print(today_result)
     if today_result == {}:
         load_res_yet = True
     
@@ -104,7 +103,7 @@ def get_stream():
             start_time = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, times[num + 1].second + 1)
             end_time = times[num + 2]
     start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second + 5)
-    end_time = datetime.datetime(now.year, now.month, now.day, 0, 22, 40)
+    end_time = datetime.datetime(now.year, now.month, now.day, 2, 47, 40)
                 
     if start_time.hour != 2:
         get_result()
@@ -118,18 +117,14 @@ def get_stream():
         nonlocal start_time, end_time
         
         #if com(datetime.datetime(now.year, now.month, now.day, 22, 47, 40), start_time):
-        #load_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 45)
-        load_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 0, 0, 45)
-        #r_start_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 35, 0)
-        r_start_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 0, 0, 0)
+        load_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 45)
+        r_start_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 35, 0)
         start_str = start_time.date().strftime('%Y/%m/%d')
         r_end_time = datetime.datetime(start_time.year, start_time.month, start_time.day + 1, 0, 0, 0)
-
     
         global oath, today_result, load_res_yet
         proxy_dict = {"http": "socks5://127.0.0.1:9050", "https": "socks5://127.0.0.1:9050"}
         run = 1
-
 
         while run:
             try:
@@ -141,8 +136,6 @@ def get_stream():
                             json_response = json.loads(response_line)
                             tweet_id = json_response["data"]["id"]
                             t_time = TweetId2Time(int(tweet_id))
-                            print(com(load_time, t_time))
-                            print(load_res_yet)
 			
                             if com(load_time, t_time) and load_res_yet:
                                 get_result()
