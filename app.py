@@ -6,6 +6,7 @@ from requests_oauthlib import OAuth1Session
 import time
 import datetime
 import traceback
+import timeout_decorator
 
 consumer_key = os.environ['CK']
 consumer_secret = os.environ['CS']
@@ -80,103 +81,120 @@ def com_t(f, s, t):
     return (s - f).total_seconds() >= 0 and (t - s).total_seconds() > 0
 
 
-def get_stream(headers):
+def get_stream():
     now = datetime.datetime.now()
     times = [
         datetime.datetime(now.year, now.month, now.day, 0, 0, 0),
-        datetime.datetime(now.year, now.month, now.day, 3, 0, 0),
-        datetime.datetime(now.year, now.month, now.day, 7, 0, 0),
-        datetime.datetime(now.year, now.month, now.day, 11, 0, 0),
-        datetime.datetime(now.year, now.month, now.day, 15, 0, 0),
-        datetime.datetime(now.year, now.month, now.day, 19, 0, 0),
-        datetime.datetime(now.year, now.month, now.day, 23, 0, 0),
-        datetime.datetime(now.year, now.month, now.day + 1, 3, 0, 0),
-        datetime.datetime(now.year, now.month, now.day + 1, 7, 0, 0)
+        datetime.datetime(now.year, now.month, now.day, 2, 47, 40),
+        datetime.datetime(now.year, now.month, now.day, 6, 47, 40),
+        datetime.datetime(now.year, now.month, now.day, 10, 47, 40),
+        datetime.datetime(now.year, now.month, now.day, 14, 47, 40),
+        datetime.datetime(now.year, now.month, now.day, 18, 47, 40),
+        datetime.datetime(now.year, now.month, now.day, 22, 47, 40),
+        datetime.datetime(now.year, now.month, now.day + 1, 2, 47, 40),
+        datetime.datetime(now.year, now.month, now.day + 1, 6, 47, 40)
     ]
     for num in range(7):
         if com_t(times[num], now, times[num + 1]):
-            start_time = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, 15)
-            #start_time2 = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, 20)
+            start_time = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, times[num + 1].second + 1)
             end_time = times[num + 2]
-            exit_time = datetime.datetime(times[num + 2].year, times[num + 2].month, times[num + 2].day, times[num + 2].hour, times[num + 2].minute, 5)
-
-    load_res_yet = True
-    load_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 45)
-    r_start_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 35, 0)
-    start_str = start_time.date().strftime('%Y/%m/%d')
-    r_end_time = datetime.datetime(start_time.year, start_time.month, start_time.day + 1, 0, 0, 0)
-
+            
+    start_time = datetime.datetime(now.year, now.month, now.day, 14, 8, 40)
+    end_time = datetime.datetime(now.year, now.month, now.day, 14, 9, 40)
+            
     time.sleep((start_time - datetime.datetime.now()).total_seconds())
     
-    global oath, today_result
-    proxy_dict = {"http": "socks5://127.0.0.1:9050", "https": "socks5://127.0.0.1:9050"}
-    run = 1
-    timeout = (exit_time - datetime.datetime.now()).total_seconds() 
-    while run:
-        try:
-            with requests.get("https://api.twitter.com/2/tweets/search/stream?tweet.fields=referenced_tweets&expansions=author_id&user.fields=name", auth=bearer_oauth2, stream=True, timeout=timeout) as response:
-                if response.status_code != 200:
-                    raise Exception("Cannot get stream (HTTP {}): {}".format(response.status_code, response.text))
-                for response_line in response.iter_lines():
-                    if response_line:
-                        json_response = json.loads(response_line)
-                        tweet_id = json_response["data"]["id"]
-                        t_time = TweetId2Time(int(tweet_id))
-                        if com_t(start_time, t_time, end_time):
-                        
-                            tweet_text = json_response["data"]["text"]
-                            if "@Rank334" in tweet_text or "@rank334" in tweet_text:
-                                reply_id = json_response["data"]["id"]
-                                rep_text = ""
-						
-                                if 'referenced_tweets' in json_response["data"]:
-                                    orig_id = json_response["data"]['referenced_tweets'][0]["id"]
-                                    orig_time = TweetId2Time(int(orig_id))
-                                    if json_response["data"]['referenced_tweets'][0]["type"] == "retweeted":
-                                        continue
-                                    else:
-                                        rep_text = "ツイート時刻: " + TimeToStr(orig_time)
-                                else:
-                                    if com_t(r_start_time, t_time, r_end_time):
-                                        key = str(json_response["data"]["author_id"])
-                                        if key in today_result:
-                                            rep_text = today_result[key][1] + "\n\n" + start_str + "の334結果\nResult: +" + today_result[key][2] + "sec\nRank: " + today_result[key][0] + " / " + today_result["参加者数"][0]
-                                        else:
-                                            rep_text = json_response["includes"]["users"][0]["name"] + "\n\n" + start_str + "の334結果\nResult: DQ\nRank: DQ / " + today_result["参加者数"][0]
-                                    else:
-                                        continue
-							
-                                params = {"text": rep_text, "reply": {"in_reply_to_tweet_id": reply_id}}
-                                response = oath.post("https://api.twitter.com/2/tweets", json = params)
-                                #print(response.headers["x-rate-limit-remaining"])
-                                if "status" in response.json():
-                                    if response.json()["status"] == 429:
-                                        response = oath.post("https://api.twitter.com/2/tweets", json = params, proxies = proxy_dict)
-                                        
-                        if com(load_time, t_time) and com_t(start_time, load_time, end_time) and load_res_yet:
-                            load_res_yet = False
-                            get_result()
-
-
-        except ChunkedEncodingError as chunkError:
-            print(traceback.format_exc())
-            time.sleep(6)
-            continue
+    timeout = (end_time - datetime.datetime.now()).total_seconds()
+    
+    @timeout_decorator.timeout(timeout)
+    def stream():
+        nonlocal start_time, end_time
         
-        except ConnectionError as e:
-            print(traceback.format_exc())
-            run+=1
-            if run <10:
+        load_res_yet = True
+        load_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 45)
+        r_start_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 35, 0)
+        start_str = start_time.date().strftime('%Y/%m/%d')
+        r_end_time = datetime.datetime(start_time.year, start_time.month, start_time.day + 1, 0, 0, 0)
+
+    
+        global oath, today_result
+        proxy_dict = {"http": "socks5://127.0.0.1:9050", "https": "socks5://127.0.0.1:9050"}
+        run = 1
+
+
+        while run:
+            try:
+                with requests.get("https://api.twitter.com/2/tweets/search/stream?tweet.fields=referenced_tweets&expansions=author_id&user.fields=name", auth=bearer_oauth2, stream=True, timeout=timeout) as response:
+                    if response.status_code != 200:
+                        raise Exception("Cannot get stream (HTTP {}): {}".format(response.status_code, response.text))
+                    for response_line in response.iter_lines():
+                        if response_line:
+                            json_response = json.loads(response_line)
+                            tweet_id = json_response["data"]["id"]
+                            t_time = TweetId2Time(int(tweet_id))
+                            if com_t(start_time, t_time, end_time):
+                        
+                                tweet_text = json_response["data"]["text"]
+                                if "@Rank334" in tweet_text or "@rank334" in tweet_text:
+                                    reply_id = json_response["data"]["id"]
+                                    rep_text = ""
+						
+                                    if 'referenced_tweets' in json_response["data"]:
+                                        orig_id = json_response["data"]['referenced_tweets'][0]["id"]
+                                        orig_time = TweetId2Time(int(orig_id))
+                                        if json_response["data"]['referenced_tweets'][0]["type"] == "retweeted":
+                                            continue
+                                        else:
+                                            rep_text = "ツイート時刻: " + TimeToStr(orig_time)
+                                    else:
+                                        if com_t(r_start_time, t_time, r_end_time):
+                                            key = str(json_response["data"]["author_id"])
+                                            if key in today_result:
+                                                rep_text = today_result[key][1] + "\n\n" + start_str + "の334結果\nResult: +" + today_result[key][2] + "sec\nRank: " + today_result[key][0] + " / " + today_result["参加者数"][0]
+                                            else:
+                                                rep_text = json_response["includes"]["users"][0]["name"] + "\n\n" + start_str + "の334結果\nResult: DQ\nRank: DQ / " + today_result["参加者数"][0]
+                                        else:
+                                            continue
+							
+                                    params = {"text": rep_text, "reply": {"in_reply_to_tweet_id": reply_id}}
+                                    response = oath.post("https://api.twitter.com/2/tweets", json = params)
+                                    #print(response.headers["x-rate-limit-remaining"])
+                                    if "status" in response.json():
+                                        if response.json()["status"] == 429:
+                                            response = oath.post("https://api.twitter.com/2/tweets", json = params, proxies = proxy_dict)
+                                        
+                            if com(load_time, t_time) and com_t(start_time, load_time, end_time) and load_res_yet:
+                                load_res_yet = False
+                                get_result()
+
+            except timeout_decorator.TimeoutError:
+                print(start_time)
+                print(end_time)
+                print(datetime.datetime.now())
+                run = 0
+
+            except ChunkedEncodingError as chunkError:
+                print(traceback.format_exc())
                 time.sleep(6)
-                print("再接続します",run+"回目")
                 continue
-            else:
-                run=0
-        except Exception as e:
-            # some other error occurred.. stop the loop
-            print("Stopping loop because of un-handled error")
-            print(traceback.format_exc())
-            run = 0
+        
+            except ConnectionError as e:
+                print(traceback.format_exc())
+                run+=1
+                if run <10:
+                    time.sleep(6)
+                    print("再接続します",run+"回目")
+                    continue
+                else:
+                    run=0
+            except Exception as e:
+                # some other error occurred.. stop the loop
+                print("Stopping loop because of un-handled error")
+                print(traceback.format_exc())
+                run = 0
+              
+    stream()
+    
 	    
 class ChunkedEncodingError(Exception):
     pass
@@ -187,7 +205,7 @@ def main():
     rules = get_rules()
     delete = delete_all_rules(rules)
     set = set_rules(delete)
-    get_stream(set)
+    get_stream()
 
  
 if __name__ == "__main__":
