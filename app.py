@@ -71,6 +71,7 @@ today_result = {}
 load_res_yet = True
 
 def get_result():
+    load_res_yet = False
     global today_result, load_res_yet
     r = requests.get(os.environ['URL2'])
     today_result = r.json()
@@ -168,8 +169,7 @@ def get_stream():
                                         if response.json()["status"] == 429:
                                             response = oath.post("https://api.twitter.com/2/tweets", json = params, proxies = proxy_dict)
                                         
-                            if com(load_time, t_time) and com_t(start_time, load_time, end_time) and load_res_yet:
-                                load_res_yet = False
+                            if com(load_time, t_time) and load_res_yet:
                                 get_result()
 
             except timeout_decorator.TimeoutError:
