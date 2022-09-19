@@ -44,7 +44,7 @@ def delete_all_rules(rules):
     #print(json.dumps(response.json()))
 
 def set_rules(delete):
-    rules = [{"value":"@Rank334 -is:retweet"}]
+    rules = [{"value":"to:Rank334"}]
     payload = {"add": rules}
     response = requests.post("https://api.twitter.com/2/tweets/search/stream/rules", auth=bearer_oauth, json=payload)
     if response.status_code != 201:
@@ -98,6 +98,7 @@ def get_stream():
         if com_t(times[num], now, times[num + 1]):
             start_time = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, times[num + 1].second + 1)
             end_time = times[num + 2]
+    start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute + 1, 0)
             
     time.sleep((start_time - datetime.datetime.now()).total_seconds())
     
@@ -199,9 +200,9 @@ class ChunkedEncodingError(Exception):
 
 def main():
     get_result()
-    #rules = get_rules()
-    #delete = delete_all_rules(rules)
-    #set = set_rules(delete)
+    rules = get_rules()
+    delete = delete_all_rules(rules)
+    set = set_rules(delete)
     get_stream()
 
  
