@@ -96,9 +96,9 @@ def get_stream(headers):
     for num in range(7):
         if com_t(times[num], now, times[num + 1]):
             start_time = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, 15)
-            start_time2 = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, 20)
+            #start_time2 = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, 20)
             end_time = times[num + 2]
-            exit_time = datetime.datetime(times[num + 2].year, times[num + 2].month, times[num + 2].day, times[num + 2].hour, times[num + 2].minute, 14)
+            exit_time = datetime.datetime(times[num + 2].year, times[num + 2].month, times[num + 2].day, times[num + 2].hour, times[num + 2].minute, 5)
 
     load_res_yet = True
     load_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 45)
@@ -122,7 +122,7 @@ def get_stream(headers):
                         json_response = json.loads(response_line)
                         tweet_id = json_response["data"]["id"]
                         t_time = TweetId2Time(int(tweet_id))
-                        if com_t(start_time2, t_time, end_time):
+                        if com_t(start_time, t_time, end_time):
                         
                             tweet_text = json_response["data"]["text"]
                             if "@Rank334" in tweet_text or "@rank334" in tweet_text:
