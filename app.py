@@ -199,9 +199,9 @@ class ChunkedEncodingError(Exception):
 
 def main():
     get_result()
-    rules = get_rules()
-    delete = delete_all_rules(rules)
-    set = set_rules(delete)
+    #rules = get_rules()
+    #delete = delete_all_rules(rules)
+    #set = set_rules(delete)
     get_stream()
 
  
