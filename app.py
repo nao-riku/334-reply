@@ -71,8 +71,8 @@ today_result = {}
 load_res_yet = True
 
 def get_result():
-    load_res_yet = False
     global today_result, load_res_yet
+    load_res_yet = False
     r = requests.get(os.environ['URL2'])
     today_result = r.json()
     if today_result == {}:
