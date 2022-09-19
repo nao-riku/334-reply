@@ -75,6 +75,7 @@ def get_result():
     load_res_yet = False
     r = requests.get(os.environ['URL2'])
     today_result = r.json()
+    print(today.result)
     if today_result == {}:
         load_res_yet = True
     
@@ -103,7 +104,7 @@ def get_stream():
             start_time = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, times[num + 1].second + 1)
             end_time = times[num + 2]
     start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute + 1, 0)
-    end_time = datetime.datetime(now.year, now.month, now.day, 2, 47, 40)
+    end_time = datetime.datetime(now.year, now.month, now.day, 0, 12, 40)
                 
     if start_time.hour != 2:
         get_result()
@@ -140,6 +141,8 @@ def get_stream():
                             json_response = json.loads(response_line)
                             tweet_id = json_response["data"]["id"]
                             t_time = TweetId2Time(int(tweet_id))
+                            print(com(load_time, t_time))
+                            print(load_res_yet)
 			
                             if com(load_time, t_time) and load_res_yet:
                                 get_result()
