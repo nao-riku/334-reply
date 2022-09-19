@@ -99,8 +99,8 @@ def get_stream():
             start_time = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, times[num + 1].second + 1)
             end_time = times[num + 2]
             
-    start_time = datetime.datetime(now.year, now.month, now.day, now.hour, 44, 41)
-    end_time = datetime.datetime(now.year, now.month, now.day, now.hour, 45, 40)
+    start_time = datetime.datetime(now.year, now.month, now.day, now.hour, 45, 41)
+    end_time = datetime.datetime(now.year, now.month, now.day, now.hour, 46, 40)
             
     time.sleep((start_time - datetime.datetime.now()).total_seconds())
     
