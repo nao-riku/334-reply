@@ -103,7 +103,7 @@ def get_stream():
             start_time = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, times[num + 1].second + 1)
             end_time = times[num + 2]
     start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute + 1, 0)
-    end_time = datetime.datetime(now.year, now.month, now.day + 1, 2, 47, 40)
+    end_time = datetime.datetime(now.year, now.month, now.day, 2, 47, 40)
                 
     if start_time.hour != 2:
         get_result()
@@ -117,8 +117,10 @@ def get_stream():
         nonlocal start_time, end_time
         
         #if com(datetime.datetime(now.year, now.month, now.day, 22, 47, 40), start_time):
-        load_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 45)
-        r_start_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 35, 0)
+        #load_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 45)
+        load_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 0, 0, 45)
+        #r_start_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 35, 0)
+        r_start_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 0, 0, 0)
         start_str = start_time.date().strftime('%Y/%m/%d')
         r_end_time = datetime.datetime(start_time.year, start_time.month, start_time.day + 1, 0, 0, 0)
 
