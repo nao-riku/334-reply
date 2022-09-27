@@ -77,7 +77,6 @@ def get_result():
     r = requests.get(os.environ['URL2'])
     today_result = r.json()["result"]
     world_rank = r.json()["rank"]
-    print(world_rank)
     if today_result == {} or world_rank == {}:
         load_res_yet = True
     
@@ -105,13 +104,12 @@ def get_stream():
         if com_t(times[num], now, times[num + 1]):
             start_time = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, times[num + 1].second + 2)
             end_time = times[num + 2]
-    start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second + 3)
-    end_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute+1, 59)
+    #start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second + 3)
                 
     if start_time.hour != 2:
         get_result()
         
-    time.sleep(1)#(start_time - datetime.datetime.now()).total_seconds())
+    time.sleep(start_time - datetime.datetime.now()).total_seconds())
     
     timeout = (end_time - datetime.datetime.now()).total_seconds()
     
@@ -120,7 +118,7 @@ def get_stream():
         nonlocal start_time, end_time
         
         #if com(datetime.datetime(now.year, now.month, now.day, 22, 47, 40), start_time):
-        load_time = start_time#datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 30)
+        load_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 30)
         r_start_time = load_time #datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 35, 0)
         start_str = start_time.date().strftime('%Y/%m/%d')
         r_end_time = datetime.datetime(start_time.year, start_time.month, start_time.day + 1, 0, 0, 0)
@@ -166,7 +164,7 @@ def get_stream():
                                                 else:
                                                     rep_text2 = ""
                                                 rep_text = json_response["includes"]["users"][0]["name"] + "\n\n最高pt: " + world_rank[key][2] + "\n歴代: " + str(world_rank[key][3]) + " / " + world_rank["累計"][0] + "\n現在pt: " + world_rank[key][4] + "\n世界ランク: " + str(world_rank[key][5]) + " / " + world_rank["現在"][0] + rep_text2 +\
-                                                "\n出場試合数: " + str(world_rank[key][7]) + "\自己ベスト: " + world_rank[key][0] + " (" + str(world_rank[key][1]) + "回)\n戦績: 🥇×" + str(world_rank[key][8]) + " 🥈×" + str(world_rank[key][9]) + " 🥉×" + str(world_rank[key][10]) + " 📋×" + str(world_rank[key][11]) 
+                                                "\n出場試合数: " + str(world_rank[key][7]) + "\n自己ベスト: " + world_rank[key][0] + " (" + str(world_rank[key][1]) + "回)\n戦績: 🥇×" + str(world_rank[key][8]) + " 🥈×" + str(world_rank[key][9]) + " 🥉×" + str(world_rank[key][10]) + " 📋×" + str(world_rank[key][11]) 
                                             else:
                                                 rep_text = json_response["includes"]["users"][0]["name"] + "\n\n最高pt: 0\n歴代: - / " + world_rank["累計"][0] + "\n現在pt: 0\n世界ランク: - / " + world_rank["現在"][0] + "\n出場試合数: 0\n自己ベスト: -\n戦績: 🥇×0 🥈×0 🥉×0 📋×0"
                                         else:
