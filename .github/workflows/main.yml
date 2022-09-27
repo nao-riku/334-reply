@@ -16,8 +16,8 @@ jobs:
         with:
           python-version: '3.8'
       - run: |
-          brew install tor
-          brew services start tor
+          #brew install tor
+          #brew services start tor
           pip install -r requirements.txt
           
       - name: Run Python
