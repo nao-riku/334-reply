@@ -107,7 +107,7 @@ def get_stream():
     start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute + 1, 10)
                 
     if start_time.hour != 2:
-        get_result()
+        pass#get_result()
         
     time.sleep(start_time - datetime.datetime.now()).total_seconds())
     
