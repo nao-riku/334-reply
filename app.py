@@ -68,14 +68,16 @@ def TimeToStr(d):
     return stringTime
 
 today_result = {}
+world_rank = {}
 load_res_yet = True
 
 def get_result():
-    global today_result, load_res_yet
+    global today_result, world_rank, load_res_yet
     load_res_yet = False
     r = requests.get(os.environ['URL2'])
-    today_result = r.json()
-    if today_result == {}:
+    today_result = r.json()["result"]
+    world_rank = r.json()["rank"]
+    if today_result == {} or world_rank == {}:
         load_res_yet = True
     
 def com(f, s):
@@ -102,6 +104,8 @@ def get_stream():
         if com_t(times[num], now, times[num + 1]):
             start_time = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, times[num + 1].second + 2)
             end_time = times[num + 2]
+    start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second + 2)
+    end_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute+1, 59)
                 
     if start_time.hour != 2:
         get_result()
@@ -115,12 +119,12 @@ def get_stream():
         nonlocal start_time, end_time
         
         #if com(datetime.datetime(now.year, now.month, now.day, 22, 47, 40), start_time):
-        load_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 30)
+        load_time = start_time#datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 30)
         r_start_time = load_time #datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 35, 0)
         start_str = start_time.date().strftime('%Y/%m/%d')
         r_end_time = datetime.datetime(start_time.year, start_time.month, start_time.day + 1, 0, 0, 0)
     
-        global oath, today_result, load_res_yet
+        global oath, today_result, world_rank, load_res_yet
         proxy_dict = {"http": "socks5://127.0.0.1:9050", "https": "socks5://127.0.0.1:9050"}
         run = 1
 
@@ -152,8 +156,22 @@ def get_stream():
                                             rep_text = "ツイート時刻: " + TimeToStr(orig_time)
                                         else:
                                             continue
+                                    elif "ランク" in tweet_text or "ランキング" in tweet_text:
+                                        if com_t(r_start_time, t_time, r_end_time) and today_result != {} and world_rank != {}:
+                                            key = str(json_response["data"]["author_id"])
+                                            if key in world_rank:
+                                                if world_rank[key][4] != world_rank[key][6]:
+                                                    rep_text2 = "\n参考記録: " + world_rank[key][6]
+                                                else:
+                                                    rep_text2 = ""
+                                                rep_text = json_response["includes"]["users"][0]["name"] + "\n\n最高pt: " + world_rank[key][2] + "\n歴代: " + str(world_rank[key][3]) + " / " + world_rank["累計"][0] + "\n現在pt: " + world_rank[key][4] + "\n世界ランク: " + str(world_rank[key][5]) + " / " + world_rank["現在"][0] + rep_text2 +\
+                                                "\n出場試合数: " + str(world_rank[key][7]) + "\自己ベスト: " + world_rank[key][0] + " (" + world_rank[key][1] + "回)\n戦績: 🥇×" + world_rank[key][8] + " 🥈×" + world_rank[key][9] + " 🥉×" + world_rank[key][10] + " 📋×" + world_rank[key][11] 
+                                            else:
+                                                rep_text = json_response["includes"]["users"][0]["name"] + "\n\n最高pt: 0\n歴代: - / " + world_rank["累計"][0] + "\n現在pt: 0\n世界ランク: - / " + world_rank["現在"][0] + "\n出場試合数: 0\自己ベスト: -\n戦績: 🥇×0 🥈×0 🥉×0 📋×0"
+                                        else:
+                                            continue
                                     else:
-                                        if com_t(r_start_time, t_time, r_end_time) and today_result != {}:
+                                        if com_t(r_start_time, t_time, r_end_time) and today_result != {} and world_rank != {}:
                                             key = str(json_response["data"]["author_id"])
                                             if key in today_result:
                                                 rep_text = today_result[key][1] + "\n\n" + start_str + "の334結果\nresult: +" + today_result[key][2] + " [sec]\nrank: " + today_result[key][0] + " / " + today_result["参加者数"][0]
