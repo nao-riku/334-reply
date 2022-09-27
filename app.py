@@ -168,7 +168,7 @@ def get_stream():
                                             else:
                                                 rep_text = json_response["includes"]["users"][0]["name"] + "\n\n最高pt: 0\n歴代: - / " + world_rank["累計"][0] + "\n現在pt: 0\n世界ランク: - / " + world_rank["現在"][0] + "\n出場試合数: 0\n自己ベスト: -\n戦績: 🥇×0 🥈×0 🥉×0 📋×0"
                                         else:
-                                            continue
+                                            rep_text = "申し訳ありません\nランク照会可能時間はは3:34:30ごろ - 23:59:59となっております"
                                     else:
                                         if com_t(r_start_time, t_time, r_end_time) and today_result != {} and world_rank != {}:
                                             key = str(json_response["data"]["author_id"])
@@ -177,7 +177,7 @@ def get_stream():
                                             else:
                                                 rep_text = json_response["includes"]["users"][0]["name"] + "\n\n" + start_str + "の334結果\nresult: DQ\nrank: DQ / " + today_result["参加者数"][0]
                                         else:
-                                            continue
+                                            rep_text = "申し訳ありません\nランク照会可能時間はは3:34:30ごろ - 23:59:59となっております"
 							
                                     params = {"text": rep_text, "reply": {"in_reply_to_tweet_id": reply_id}}
                                     response = oath.post("https://api.twitter.com/2/tweets", json = params)
