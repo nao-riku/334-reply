@@ -77,7 +77,7 @@ def get_result():
     r = requests.get(os.environ['URL2'])
     today_result = r.json()["result"]
     world_rank = r.json()["rank"]
-    print(world_result)
+    print(world_rank)
     if today_result == {} or world_rank == {}:
         load_res_yet = True
     
