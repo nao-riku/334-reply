@@ -77,6 +77,7 @@ def get_result():
     r = requests.get(os.environ['URL2'])
     today_result = r.json()["result"]
     world_rank = r.json()["rank"]
+    print(world_result)
     if today_result == {} or world_rank == {}:
         load_res_yet = True
     
@@ -164,7 +165,7 @@ def get_stream():
                                                     rep_text2 = "\n参考記録: " + world_rank[key][6]
                                                 else:
                                                     rep_text2 = ""
-                                                rep_text = json_response["includes"]["users"][0]["name"] + "\n\n最高pt: " + world_rank[key][2] + "\n歴代: " + str(world_rank[key][3]) + " / " + world_rank["累計"][0] + "\n現在pt: " + world_rank[key][4] + "\n世界ランク: " + str(world_rank[key][5]) + " / " + world_rank["現在"][0] + rep_text2 +\
+                                                rep_text = json_response["includes"]["users"][0]["name"] + "\n\n最高pt: " + world_rank[key][2] + "\n歴代: " + world_rank[key][3] + " / " + world_rank["累計"][0] + "\n現在pt: " + world_rank[key][4] + "\n世界ランク: " + world_rank[key][5] + " / " + world_rank["現在"][0] + rep_text2 +\
                                                 "\n出場試合数: " + str(world_rank[key][7]) + "\自己ベスト: " + world_rank[key][0] + " (" + world_rank[key][1] + "回)\n戦績: 🥇×" + world_rank[key][8] + " 🥈×" + world_rank[key][9] + " 🥉×" + world_rank[key][10] + " 📋×" + world_rank[key][11] 
                                             else:
                                                 rep_text = json_response["includes"]["users"][0]["name"] + "\n\n最高pt: 0\n歴代: - / " + world_rank["累計"][0] + "\n現在pt: 0\n世界ランク: - / " + world_rank["現在"][0] + "\n出場試合数: 0\n自己ベスト: -\n戦績: 🥇×0 🥈×0 🥉×0 📋×0"
