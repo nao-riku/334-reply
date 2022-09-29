@@ -97,14 +97,14 @@ def get_stream():
         datetime.datetime(now.year, now.month, now.day, 14, 35, 40),
         datetime.datetime(now.year, now.month, now.day, 18, 35, 40),
         datetime.datetime(now.year, now.month, now.day, 22, 35, 40),
-        datetime.datetime(now.year, now.month, now.day + 1, 2, 35, 40),
-        datetime.datetime(now.year, now.month, now.day + 1, 6, 35, 40)
+        datetime.datetime(now.year, now.month, now.day, 2, 35, 40) + datetime.timedelta(days=1),
+        datetime.datetime(now.year, now.month, now.day, 6, 35, 40) + datetime.timedelta(days=1)
     ]
     for num in range(7):
         if com_t(times[num], now, times[num + 1]):
             start_time = datetime.datetime(times[num + 1].year, times[num + 1].month, times[num + 1].day, times[num + 1].hour, times[num + 1].minute, times[num + 1].second + 2)
             end_time = times[num + 2]
-    #start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute + 1, 10)
+    #start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second) + datetime.timedelta(seconds=10)
                 
     if start_time.hour != 2:
         get_result()
@@ -121,7 +121,7 @@ def get_stream():
         load_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 34, 30)
         r_start_time = load_time #datetime.datetime(start_time.year, start_time.month, start_time.day, 3, 35, 0)
         start_str = start_time.date().strftime('%Y/%m/%d')
-        r_end_time = datetime.datetime(start_time.year, start_time.month, start_time.day + 1, 0, 0, 0)
+        r_end_time = datetime.datetime(start_time.year, start_time.month, start_time.day, 0, 0, 0) + datetime.timedelta(days=1)
     
         global oath, today_result, world_rank, load_res_yet
         proxy_dict = {"http": "socks5://127.0.0.1:9050", "https": "socks5://127.0.0.1:9050"}
